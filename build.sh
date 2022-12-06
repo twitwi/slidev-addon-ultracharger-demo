@@ -15,6 +15,7 @@ rm -rf dist/
 slidev build --base=/"$repo"
 git switch gh-pages
 {
+    git ls-files | grep -ve '^\.gitignore$' | xargs git rm
     cp -rf dist/* .
     git add .
     git commit -m "Scripted build for gh-pages on $(date --iso-8601=seconds)"
