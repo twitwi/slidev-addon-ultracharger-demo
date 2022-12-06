@@ -33,7 +33,7 @@ A doc/demo for the ultracharger set of [Sli.dev](https://sli.dev) addons.
 
 Each feature is illustrated in its own part.<c>(this is a comment)</c>
 
-Some guidance about usage/limitations/evolutions/improvements/TODO/etc is given.
+Some guidance is also given about usage/limitations/evolutions/improvements/TODO/etc.
 
 <!--
 NB: This demo uses a custom syntax (using preparser extensions).bbb
