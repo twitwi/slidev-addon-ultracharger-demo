@@ -152,3 +152,41 @@ layout: cover
   </template>
 </p>
 
+
+
+
+@@@@@FEATURE@@@@@ Make KaTeX remember definitions
+
+With proper configuration, one can use gdef in KaTeX/LaTeX code and reuse them in other blocks or even slides.
+
+- defined in <gh href="./setup/katex.vue"/> (might work by default in some contexts?) (but it is still cool)
+
+Also have KaTeX errors inline in color as in $a^2 + 2\ab + b^2$.
+
+---
+
+# KaTeX memory across slides
+
+We can have a KaTeX block with our macro definitions
+
+$$
+\gdef\xy{\green{X,y}}
+\text{we can define macros and use them in a block: } \xy{}
+$$
+
+And use them in our text $\xy{}$
+
+or in some block
+
+<p></p>
+
+$$
+\text{we can use in a block: } \xy{}
+$$
+
+
+---
+
+# KaTeX memory across slides
+
+even in another slide, we can reuse definitions $\xy{}$
