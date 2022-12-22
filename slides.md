@@ -2,6 +2,8 @@
 theme: seriph
 addons:
   - slidev-addon-ultracharger
+addonsConfig:
+  ultracharger: {}
 NObackground: >-
   https://images.unsplash.com/photo-1511149755252-35875b273fd6?ixlib=rb-4.0.3&dl=leon-contreras-qpdfU6vehgs-unsplash.jpg&w=1920&q=80&fm=jpg&crop=entropy&cs=tinysrgb
 background: https://source.unsplash.com/qpdfU6vehgs
@@ -23,6 +25,8 @@ subtitle: ...used as both a test page and a quick documentation
 date: '2022-11-23'
 venue: Online
 author: Rémi Emonet
+ghPrefix: https://github.com/twitwi/slidev-addon-ultracharger/blob/main/
+ghSelf: https://github.com/twitwi/slidev-addon-ultracharger-demo/blob/main/
 ---
 
 # <span v-html="$slidev.configs.title?.replaceAll(' ', '<br/>')"></span>
@@ -36,7 +40,7 @@ Each feature is illustrated in its own part.<c>(this is a comment)</c>
 Some guidance is also given about usage/limitations/evolutions/improvements/TODO/etc.
 
 <!--
-NB: This demo uses a custom syntax (using preparser extensions).bbb
+NB: This demo uses a custom syntax (using preparser extensions), with all the @@@@.
 -->
 
 @@@@@FEATURE@@@@@ a/z keys for slide browsing
@@ -97,7 +101,8 @@ Use <kbd>a</kbd> and <kbd>z</kbd> to navigate from slide to slide, showing the s
 Use <kbd>b</kbd> to blackout remote clients' views (from presenter).
 
 - defined as a component in <gh href="./components/Blackout.vue"/>
-- should be instantiated in <gh href="./global-top.vue"/> (in your presentation)
+- instantiated by default in <gh href="./global-top.vue"/>
+- can be disabled with <opt disable="blackout"/>
 - registration of the keyboard shortcut in <gh href="./setup/shortcuts.ts"/>
 - NB: to test, open a client and a presenter view and press <kbd>b</kbd> in the presenter view.
 - NB: the presenter view is **not available** if you view from a hosted (e.g. github pages) version
@@ -107,11 +112,17 @@ Use <kbd>b</kbd> to blackout remote clients' views (from presenter).
 
 
 
-@@@@@FEATURE@@@@@ title page / closing page
+@@@@@FEATURE@@@@@ Title page / Closing page
 
 
-Displays metadata
-(see next slide)
+In a slide, one can use metadata (defined in the headmatter).
+
+This allows to regroup some kind of global variables at the beginning of the file, in the headmatter.
+
+These can then be used and reused in the presentation, without needing to replace everywhere.
+
+This can be done either in the native slidev way or using a helper component. 
+(see the links in the next two slides to compare both approaches)
 
 
 ---
@@ -122,14 +133,10 @@ attribution: >-
   Watt</a> on <a
   href="https://unsplash.com/collections/338595/walls?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
 layout: cover
+src: example-title-manual.md
 ---
-(here, access the config variables (headmatter) directly in the slides)
-
-# <span v-html="$slidev.configs.title?.replaceAll(' ', '<br/>')"></span>
-
-<p v-html="$slidev.configs.subtitle?.replaceAll(' ', '<br/>')" class="bg-black py-5 py-2"></p>
-
-<p v-html='"date author venue".split(" ").map(k => $slidev.configs[k]).join(" <br/> ")'></p>
+(replace by src:)
+(in a separate file to allow for easy linking to the code)
 
 ---
 background: https://source.unsplash.com/9Y9I1T4yOvo/medium
@@ -139,20 +146,28 @@ attribution: >-
   Watt</a> on <a
   href="https://unsplash.com/collections/338595/walls?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
 layout: cover
+src: example-title-component.md
 ---
-
-(here, use some helper component to access the config variables)
-# <config-var name="title"/>
-
-<config-var type="p" name="subtitle" nbsp="<br/>" class="bg-black py-5 py-2"/>
-
-<p>
-  <template v-for="v in 'date author venue'.split(' ')">
-  <config-var :name="v"/><br/>
-  </template>
-</p>
+(replace by src:)
+(in a separate file to allow for easy linking to the code)
 
 
+
+
+@@@@@FEATURE@@@@@ Default Footer
+Which also displays metadata
+(see any footer)
+
+The addons also comes with a **default footer** with
+- a centered footer with some metadata and the slide number
+  - can be disabled with <opt disable="metaFooter" />
+- a right footer with the TOC as dots
+  - can be disabled with <opt disable="tocFooter" />
+- defined in <gh href="./global-top.vue" />
+
+The footer can be tuned with
+- <opt name="fakeEnds" value="'5 -2'" /> with a list of slide index to use as fake ends, negative numbers being counted from the end (e.g. -2 if you have 2 extra slides to hide)
+- <opt name="metaFooter" value="'date name'" /> (space-separated list of metadata)
 
 
 @@@@@FEATURE@@@@@ Make KaTeX remember definitions
