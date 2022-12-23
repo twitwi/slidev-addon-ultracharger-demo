@@ -43,6 +43,12 @@ const content = computed(() => {
 })
 </script>
 <style scoped>
+code {
+    color: darkcyan;
+}
+.dark code {
+    color: cyan;
+}
 code.pre {
     white-space: pre;
     border: 1px solid lightgray;

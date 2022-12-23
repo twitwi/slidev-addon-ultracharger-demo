@@ -205,3 +205,108 @@ $$
 # KaTeX memory across slides
 
 even in another slide, we can reuse definitions $\xy{}$
+
+
+
+
+
+@@@@@FEATURE@@@@@ SVG Inlining
+Loading SVG into the DOM
+
+Use like an `img` but it is inlined: the SVG ends up in the DOM.
+
+This allows CSS styling and js interactions. \
+For instance, we set css :hover to blur.
+
+Move the pointer on any part of the image to test.
+<InlineSvg src="/nn-deep.svg" />
+
+<style>
+  /* need :deep() as the loading happens after the automatic addition of scoped css */
+  :deep(svg) {  background: white; }
+  :deep(svg) :is(path,text):hover { filter: blur(1px); transition: filter 300ms linear; }
+</style>
+
+---
+
+# InlineSvg, specifying dimensions
+
+The height and/or width can be specified, and will get inserted in the root `svg` element
+
+<InlineSvg src="/nn-deep.svg" width="100%" wrap title="width=100%"/>
+
+<InlineSvg src="/nn-deep.svg" height="50px"  wrap title="height=50px"/>
+
+<InlineSvg src="/nn-deep.svg" height="100px" width="75%" wrap title="height=100px width=75%" />
+
+
+<style>
+  :deep(svg) { border: 1px solid red; background: white; }
+</style>
+
+---
+
+# InlineSvg, wrapping
+
+By default, the `InlineSvg` directly ends up as `svg` (with no added properties)
+<InlineSvg src="/nn-deep.svg" class="blurry is not considered" height="130px" />
+
+... `<InlineSvg wrap src=.../>` wraps it (inside a `div`), that inherits the properties (e.g. a `blurry` class)
+<InlineSvg src="/nn-deep.svg" class="blurry" wrap height="130px"/>
+NB: height and/or width are applied to the `svg` element
+
+<style>
+  :deep(svg) {  background: white; }
+  .blurry {
+    filter: blur(2px);
+  }
+</style>
+
+
+---
+
+# InlineSvg, automated id rewrite (et al.)
+
+Two SVG images, here as `img`, with funky arrows in the second one.
+<img src="/arrows1.svg" width="100"/>
+<img src="/arrows2.svg" width="100"/>
+
+<p>
+As inlined SVG (both use the same ids, so there is a contamination problem)
+<InlineSvg src="/arrows1.svg" height="120px" :opts="{idRewrite: false}"/>
+<InlineSvg src="/arrows2.svg" height="120px" :opts="{idRewrite: false}"/>
+</p>
+
+<p>
+Fixed using idRewrite (set by default)
+<InlineSvg src="/arrows1.svg" height="120px" />
+<InlineSvg src="/arrows2.svg" height="120px" />
+</p>
+
+(more on the next slide)
+
+<style>
+  :deep(svg), img { display: inline-block; background: white; }
+  :deep(svg) { border: 1px solid red; }
+</style>
+
+---
+
+# InlineSvg, options and workarounds
+Configuring the InlineSvg element.
+
+In addition to width/height/wrap attributed, more advanced options like `idRewrite` can be specified as
+  - `<InlineSvg :opts="{...}" />`
+  - a list of options can be found at <gh href="./components/InlineSvg.vue" line="51"/>
+
+
+NB: In case **missing arrows in your SVG** <img src="/arrows1-notfixed.svg" width="50" title="img tag"/><InlineSvg src="/arrows1-notfixed.svg" width="50px"  wrap class="svg" title="InlineSvg tag, option is not set by default"/>, <InlineSvg src="/arrows1-notfixed.svg" width="50px" :opts="{markersWorkaround: true}" wrap class="svg" title="InlineSvg tag, setting markersWorkaround"/>, <img src="/arrows1.svg" width="50" title="img tag, modified svg file"/><InlineSvg src="/arrows1.svg" width="50px" wrap class="svg" title="InlineSvg tag, modified svg file"/>
+- set `:opts="{markersWorkaround: true}"`
+- this is caused for instance by Inkscape exporting with SVG2 constructs (context-fill, context-stroke), that are not handled by browsers (chrome ignores it, firefox do not render markers at all).
+
+**Default options** can also be set globally in your presentation with
+<opt name="inlineSvg" value="{ markersWorkaround: true }"/>
+
+<style>
+  img, .svg, .svg :deep(svg) { display: inline !important; }
+</style>
