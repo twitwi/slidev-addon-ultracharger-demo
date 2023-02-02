@@ -7,10 +7,10 @@
     "export": "slidev export"
   },
   "dependencies": {
-    "@slidev/cli": "^0.38.8",
+    "@slidev/cli": "^0.39.0",
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*",
     "slidev-addon-remoji": "github:twitwi/slidev-addon-remoji",
-    "slidev-addon-ultracharger": "github:twitwi/slidev-addon-ultracharger#vslidev0.38.8"
+    "slidev-addon-ultracharger": "github:twitwi/slidev-addon-ultracharger"
   }
 }
