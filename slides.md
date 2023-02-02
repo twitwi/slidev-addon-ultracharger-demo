@@ -4,6 +4,9 @@ addons:
   - slidev-addon-ultracharger
 addonsConfig:
   ultracharger: {}
+  ultracharger:
+    inlineSvg: 
+      markersWorkaround: false
 NObackground: >-
   https://images.unsplash.com/photo-1511149755252-35875b273fd6?ixlib=rb-4.0.3&dl=leon-contreras-qpdfU6vehgs-unsplash.jpg&w=1920&q=80&fm=jpg&crop=entropy&cs=tinysrgb
 background: https://source.unsplash.com/qpdfU6vehgs
