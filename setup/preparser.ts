@@ -13,7 +13,7 @@ function match(l: String, reg: RegExp): any {
   }
 }
 
-const FEATURE = (name) => `
+const FEATURE = (name, frontmatter) => `
 ---
 background: https://source.unsplash.com/JgOeRuGD_Y4/medium
 layout: cover
@@ -24,7 +24,7 @@ attibution: Photo by <a href="https://unsplash.com/@heytowner?utm_source=unsplas
 ${name}
 </div>
 
----
+${frontmatter}
 
 # ${name}
 `
@@ -35,10 +35,17 @@ export default definePreparserSetup(() => {
       name: 'FEATURE',
       transformRawLines(lines) {
         let i = 0
+        let frontmatter = '---'
         while (i < lines.length) {
           const l = lines[i]
+          if (match(l, /^@@@@@FRONTMATTER@ +/i)) {
+            lines.splice(i, 1)
+            frontmatter = '---\n' + _rest?.replace('%n', '\n') + '\n---'
+            continue
+          }
           if (match(l, /^@@@@@FEATURE@@@@@ +/i)) {
-            lines.splice(i, 1, ...FEATURE(_rest).split('\n'))
+            lines.splice(i, 1, ...FEATURE(_rest, frontmatter).split('\n'))
+            frontmatter = '---'
             continue
           }
           i++

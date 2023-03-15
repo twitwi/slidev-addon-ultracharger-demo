@@ -3,7 +3,6 @@ theme: seriph
 addons:
   - slidev-addon-ultracharger
 addonsConfig:
-  ultracharger: {}
   ultracharger:
     inlineSvg: 
       markersWorkaround: false
@@ -303,7 +302,12 @@ In addition to width/height/wrap attributed, more advanced options like `idRewri
   - a list of options can be found at <gh href="./components/InlineSvg.vue" line="51"/>
 
 
-NB: In case **missing arrows in your SVG** <img src="/arrows1-notfixed.svg" width="50" title="img tag"/><InlineSvg src="/arrows1-notfixed.svg" width="50px"  wrap class="svg" title="InlineSvg tag, option is not set by default"/>, <InlineSvg src="/arrows1-notfixed.svg" width="50px" :opts="{markersWorkaround: true}" wrap class="svg" title="InlineSvg tag, setting markersWorkaround"/>, <img src="/arrows1.svg" width="50" title="img tag, modified svg file"/><InlineSvg src="/arrows1.svg" width="50px" wrap class="svg" title="InlineSvg tag, modified svg file"/>
+NB: In case **missing arrows in your SVG**
+ <img src="/arrows1-notfixed.svg" width="50" title="img tag"/>
+ <InlineSvg src="/arrows1-notfixed.svg" width="50px"  wrap class="svg" title="InlineSvg tag, option is not set by default"/>,
+ <InlineSvg src="/arrows1-notfixed.svg" width="50px" :opts="{markersWorkaround: true}" wrap class="svg" title="InlineSvg tag, setting markersWorkaround"/>,
+ <img src="/arrows1.svg" width="50" title="img tag, modified svg file"/>
+ <InlineSvg src="/arrows1.svg" width="50px" wrap class="svg" title="InlineSvg tag, modified svg file"/>
 - set `:opts="{markersWorkaround: true}"`
 - this is caused for instance by Inkscape exporting with SVG2 constructs (context-fill, context-stroke), that are not handled by browsers (chrome ignores it, firefox do not render markers at all).
 
@@ -313,3 +317,547 @@ NB: In case **missing arrows in your SVG** <img src="/arrows1-notfixed.svg" widt
 <style>
   img, .svg, .svg :deep(svg) { display: inline !important; }
 </style>
+
+
+
+
+
+@@@@@FEATURE@@@@@  Click animations (fine grained clicks)
+Animating (clicks) more precisely.
+
+
+---
+
+# v-clicks every="2"
+
+(feature from slidev)
+
+Can make children appear several at a time.
+
+(demo content) E.g., slidev is
+
+<v-clicks :every="2">
+
+- 📝 **Text-based** - focus...
+- 🎨 **Themable** - theme ...
+- 🧑‍💻 **Developer Friendly** - code highlighting, ...
+- 🤹 **Interactive** - embedding Vue components ...
+- 🎥 **Recording** - built-in recording and camera view
+- 📤 **Portable** - export into PDF, ...
+- 🛠 **Hackable** - anything possible on a webpage
+
+</v-clicks>
+
+They appear 2 by 2
+
+---
+
+<Anim spec="li:nth-child(2n) | strong | h1 | li:nth-child(2n+1),a">
+
+# `<Anim spec="...">`, basic appearance
+
+`spec="li:nth-child(2n) | strong | h1 | li:nth-child(2n+1),a"`
+
+(it uses a custom syntax to decide what to show, step by step, steps are separated by `|`, \
+each step is here a css selector of the elements to show at this step \
+these elements are automatically hidden at the beginning of the slide
+
+(demo content) Slidev is
+
+- 📝 **Text-based** - focus...
+- 🎨 **Themable** - theme ...
+- 🧑‍💻 **Developer Friendly** - code highlighting, ...
+- 🤹 **Interactive** - embedding Vue components ...
+- 🎥 **Recording** - built-in recording and camera view
+- 📤 **Portable** - export into PDF, ...
+- 🛠 **Hackable** - anything possible on a webpage
+
+Read more about [Why Slidev?](https://sli.dev/guide/why)
+
+</Anim>
+
+---
+
+NB:
+
+- defined in <gh href="./components/Anim.vue"/>
+- some style in <gh href="./style.css" line="14"/>
+- more features in the next slides (and in section animating SVG)
+
+---
+
+# `<Anim>`: Hide things, add/remove classes
+
+spec=\
+`"-.test | @+class bg-red-500 li | @+class blurry li li, code | @-class bg-red-500 li"`
+
+<Anim spec="-.test | @+class bg-red-500 li | @+class blurry li li, code | @-class bg-red-500 li">
+
+- NB: we can add a `-` to hide an element <span class="test">, e.g. this one</span>
+- NB: bg-red-500 is a class that comes from windicss, blurry is defined in the slide
+- NB: no problem with css selectors that contain spaces like `li li, code`
+- test
+  - test2
+  - test2
+- test
+
+</Anim>
+
+<style>
+  .blurry { filter: blur(5px); }
+</style>
+
+---
+
+# `<Anim>`: several actions in a step/click
+
+spec=\
+`"a | -a ^ strong | -strong ^ em ^ @+class blur div | a,strong ^ @+class blur strong,em"`
+
+<Anim spec="a | -a ^ strong | -strong ^ em ^ @+class blur div | a,strong ^ @+class blur strong,em">
+
+<div>some div here</div>
+
+A link (a) [here is an a](https://sli.dev/guide/why)
+
+Some bold (strong) **here is a strong**
+
+Some italic (em) *here is an em*
+
+</Anim>
+
+<style>
+  .blur { filter: blur(3px); }
+</style>
+
+
+
+
+
+
+
+@@@@@FEATURE@@@@@  SVG animations (and related)
+
+(using `<Anim>` and `<InlineSvg>`)
+
+---
+
+# `<Anim>` works with SVG elements
+
+`spec="#rect846 | #path930 | @+class blur text | @-class blur #text26519"`
+
+<Anim spec="#rect846 | #path930 | @+class blur text | @-class blur #text26519">
+<InlineSvg src="/nn-deep.svg" />
+</Anim>
+
+<style>
+  /* need :deep() as the loading happens after the automatic addition of scoped css */
+  :deep(svg) .blur { filter: blur(2px); }
+</style>
+
+---
+
+# `<Anim>` allows any mix
+
+`spec=".svg2 | .svg1 | #fr1,#fr2 | .svg1 #fr3 | .svg2 #fr3 | -text | em"`
+
+<Anim spec=".svg2 | .svg1 | #fr1,#fr2 | .svg1 #fr3 | .svg2 #fr3 | -text | em">
+
+<InlineSvg src="/test-anim.svg" width="420px" height="400px" wrap class="half svg1"/>
+
+<InlineSvg src="/test-anim.svg" width="420px" height="400px" wrap class="half svg2"/>
+
+*And voila!*
+
+</Anim>
+
+<style>
+  :deep(svg) { border: 1px solid red; }
+  .half { width: 50%; display: inline-block; }
+  em { font-size: 30px; background: white; padding: 0 0.5em; margin-left: 1em; display: inline-block; transform: translate(0, -1.1em)}
+</style>
+
+---
+
+# `<Anim>`: move along SVG path
+
+`spec="@along #path1 #sh1,#sh2
+| @along #path1 #sh3
+| @along #path1 #sh1-1,#sh2-1,#sh3-1"`
+
+<Anim spec="@along #path1 #sh1,#sh2
+| @along #path1 #sh3
+| @along #path1 #sh1-1,#sh2-1,#sh3-1">
+<InlineSvg src="/test-anim.svg" height="400px"/>
+</Anim>
+
+
+---
+
+# `<Anim>`: move along, control speed
+
+`dur="700ms"` \
+`spec="@along #path1 #sh1,#sh2
+| @alongd #path1 2.5s #sh3
+| @along #path1 #sh1-1,#sh2-1"`
+
+`dur="..."` to set the default duration + `@alongd` instead of `@along` to specify a duration for the step.
+
+<Anim dur="700ms" spec="@along #path1 #sh1,#sh2
+| @alongd #path1 2.5s #sh3
+| @along #path1 #sh1-1,#sh2-1">
+<InlineSvg src="/test-anim.svg" height="350px"/>
+</Anim>
+
+---
+
+# `<Anim>`: successive move along and backward move
+
+`spec="@along #path1 #sh1,#sh3-1
+ |@along #path1 #sh1,#sh3-1` \
+`     |@along -#path1 #sh1,#sh3-1
+|@along #path1 #sh1,#sh3-1`
+
+NB: newlines are ok in `spec`
+
+<Anim spec="@along #path1 #sh1,#sh3-1
+|@along #path1 #sh1,#sh3-1
+|@along -#path1 #sh1,#sh3-1
+|@along #path1 #sh1,#sh3-1">
+<InlineSvg src="/test-anim.svg" height="330px"/>
+</Anim>
+
+
+---
+
+# `<Anim>`: move along on non-SVG elements
+
+`spec="
+ @along #path1   .stuff
+|@along #path1-1 .stuff
+|@along #path1-1 .stuff"`
+
+NB: still needs an SVG path, also svg vs html units can be tricky.
+
+<Anim spec="
+ @along #path1   .stuff
+|@along #path1-1 .stuff
+|@along #path1-1 .stuff
+">
+...
+<span style="display: inline-block" class="stuff">stuff</span>
+...
+<span style="display: inline-block" class="stuff">evolve <ExampleCounter /></span>
+...
+<InlineSvg src="/test-anim.svg" wrap style="display:none"/>
+</Anim>
+
+<style>
+  .stuff { border: 1px solid red; }
+</style>
+
+
+
+
+
+@@@@@FEATURE@@@@@  Playing with the (SVG) viewBox
+
+(still using `<Anim>`)
+
+---
+
+# `<Anim>`: Playing with the SVG viewBox, zooming
+
+`spec="@viewbox #fr1 | @alongd #sh1-1 1500 #sh1-2` \
+`    | @viewbox #rect6173 | @viewbox svg | @viewbox #rect6173` \
+`    | @viewbox #sh3-1 | @viewboxd #sh1-2 1500 | @viewbox svg"`
+
+NB: using `@viewbox` for default duration or `@viewboxd` to specify the duration.
+
+<Anim spec="@viewbox #fr1 | @alongd #sh1-1 1500 #sh1-2 | @viewbox #rect6173 | @viewbox svg | @viewbox #rect6173 | @viewbox #sh3-1 | @viewboxd #sh1-2 1500 | @viewbox svg">
+<InlineSvg src="/test-anim.svg" height="300px"/>
+</Anim>
+
+
+---
+
+# `<Anim>`: TODO
+
+- TODO: allow specifying ease-in-out etc (like duration)
+- TODO: ^ maybe need special steps that set defaults for all coming steps (as in the original @anim)
+- TODO: not necessarily possible: fix the @steps issue with opacity animation on nested elements
+- TODO: might use [:nth-child(... of ...)](https://caniuse.com/?search=nth-child%20of) when/if available in browsers
+- TODO: implement viewBox-like anim for non-SVG
+
+
+
+
+
+
+
+
+@@@@@FEATURE@@@@@  Marker-based steps/clicks
+
+(still using `<Anim>`)
+
+- defined in <gh href="./components/Anim.vue"/> with some CSS in <gh href="./style.css"/>
+
+---
+
+# Marker-based steps, raw, verbose
+
+`spec="@step 1 | @step 2 | @step 3 | @step 4 | @step 5` \
+`    | -strong | @step 6 | @step 7 | @step 99"`
+
+NB: using class "step" on the marks \
+NB: here some CSS to show the mark \
+NB: the content starts hidden (low opacity) \
+NB: any big number is ok to show everything
+
+<Anim spec="@step 1 | @step 2 | @step 3 | @step 4 | @step 5 | -strong | @step 6 | @step 7 | @step 99">
+
+- first level
+- hum <span class="step"/>
+- ok <span class="step"/> <span>now we'll **nest**</span>
+  - nested 1 <span class="step"/>
+  - nested 2 <span class="step"/> <span>and 2.5</span><span class="step"/>
+  - and 3 <span class="step"/>
+- voila! <span class="step"/>
+- tada!
+
+</Anim>
+
+<style>
+  span.anim-now::before { content: ''; outline: 2px solid blue;}
+</style>
+
+---
+
+# Marker-based steps, control what is initially shown
+
+`spec="@step 1 | @step 2 | -strong | @step 42"`
+
+NB: use a mark with class `step0` (or just `<s0/>`) to decide up to where it is initially shown
+
+<Anim spec="@step 1 | @step 2 | -strong | @step 42">
+
+- first level
+- hum
+- ok now we'll <span class="step0"/> **nest**
+  - nested 1
+  - nested 2 <span class="step"/> <span>and 2.5</span>
+  - and 3
+- voila! <span class="step"/>
+- tada!
+
+</Anim>
+
+<style>
+  span.anim-now::before { content: ''; outline: 2px solid green;}
+</style>
+
+---
+
+# Marker-based steps, `@steps` shortcut + special `&|`
+
+`spec="@steps 1-4 | -strong | @steps 5-"`
+
+NB: can use `@steps` and a range to simplify writing several `@step` \
+NB: can use an open range as in `@steps 5-` to go until the end \
+NB: spec defaults to `@steps 1-` \
+NB: (TODO UPDATE) can use `&|` to insert a span with class `step` (implemented in <gh href="./vite.config.ts"/>)
+
+<Anim spec="@steps 1-4 | -strong | @steps 5-">
+
+- first level
+- hum &|
+- ok &| <span>now we'll **nest**</span>
+  - nested 1 &|
+  - nested 2 &| <span>and 2.5</span>&|
+  - and 3 &|
+- voila! &|
+- tada!
+
+</Anim>
+
+<style>
+  span.anim-now::before { content: ''; outline: 2px solid orange;}
+</style>
+
+
+
+
+
+
+@@@@@FEATURE@@@@@  Katex "align" (equation block) and code animation
+
+`spec="@maths 1-"`
+
+$$
+\gdef\lnp{\ln p}
+\gdef\mcol{\blue}
+\gdef\m{\mcol{μ}}
+\gdef\pcol{\green}
+\gdef\p{\pcol{π}}
+\gdef\zcol{\red}
+\gdef\z{\zcol{z}}
+\gdef\Z{\zcol{Z}}
+\gdef\s{σ}
+\gdef\ndist#1#2{\mathcal{N}(#1,#2)}
+\gdef\ndens#1#2#3{\mathcal{N}(#1,#2)(#3)}
+\gdef\E{\mathbb{E}}
+\gdef\comm#1{\text{\textcolor{gray}{#1} } }
+$$
+
+<Anim spec="@maths 1-">
+
+$$
+\begin{align*}
+\ln q_π(\p)
+& = \E_{\neg π}[\lnp(X,\Z,\p,\m)] + K_1 \\
+& \;\;\;\;\; \comm{(remove what is constant (and thus remains after expectation) with respect to $\p$)} \\
+& = \E_{\neg π}\left[\ln prior(\p) + \sum_i \ln \p_{\z_i}\right] + K_2 \\
+& \;\;\;\;\; \comm{(simplifying the expectations)} \\
+& = \ln prior(\p) + \sum_i \E_{\z_i}[\ln \p_{\z_i}] + K_2 \\
+& = \ln prior(\p) + \sum_i \sum_k q_z^i(k) \ln \p_k + K_2 \\
+& \;\;\;\;\; \comm{($Dir(α)$ prior + swap sums)} \\
+& = \sum_k (α_k -1 ) \ln \p_k + \sum_k \sum_i q_z^i(k) \ln \p_k + K_3 
+\;\; \comm{with $q_z^i(k)$ the responsibility, i.e. $R_{ik}$} \\
+& = \sum_k ((α_k+\sum_i R_{ik}) -1 ) \ln \p_k + K_3
+\;\; \comm{(once reorganized)}
+\end{align*}
+$$
+
+</Anim>
+
+---
+
+# `<Anim>` katex, specifying a context
+
+`spec="@mathsc 1- .my>:nth-child(1) | .my>:nth-child(2) | @mathsc 1-3 .my>:nth-child(3)"`
+
+<Anim spec="@mathsc 1- .my>:nth-child(1) | .my>:nth-child(2) | @mathsc 1-3 .my>:nth-child(3)" class="my">
+
+$$
+\begin{align*}
+\ln q_π(\p)
+& = \E_{\neg π}[\lnp(X,\Z,\p,\m)] + K_1 \\
+& \;\;\;\;\; \comm{(remove what is constant (and thus remains after expectation) with respect to $\p$)} \\
+& = \E_{\neg π}\left[\ln prior(\p) + \sum_i \ln \p_{\z_i}\right] + K_2 \\
+& = \ln prior(\p) + \sum_i \E_{\z_i}[\ln \p_{\z_i}] + K_2
+\end{align*}
+$$
+
+And we can rewrite the expectation
+
+$$
+\begin{align*}
+\ln q_π(\p)
+& = \ln prior(\p) + \sum_i \sum_k q_z^i(k) \ln \p_k + K_2 \\
+& = \sum_k (α_k -1 ) \ln \p_k + \sum_k \sum_i q_z^i(k) \ln \p_k + K_3 
+\;\; \comm{with $q_z^i(k)$ the responsibility, i.e. $R_{ik}$} \\
+& = \sum_k ((α_k+\sum_i R_{ik}) -1 ) \ln \p_k + K_3
+\;\; \comm{(once reorganized)}
+\end{align*}
+$$
+
+</Anim>
+
+
+---
+
+# `<Anim>` code, with context (just code, no codec) (highlight is on next slide)
+
+`spec="@code 1,3 .c2 | @code 1- .c1 | @code 2 .c2"`
+<!-- or -->
+
+<Anim spec="@code 1,3 .c2 | @code 1- .c1 | @code 2 .c2" class="grid grid-cols-2 gap-4">
+<div class="c1">
+
+And more code later on the left
+
+```ts
+function add(
+  a: Ref<number> | number,
+  b: Ref<number> | number
+) {
+  return computed(() => unref(a) + unref(b))
+}
+```
+
+</div>
+<div class="c2">
+
+Some code later on the right
+
+```css
+h1 {
+  color: red
+}
+```
+
+</div>
+</Anim>
+
+---
+
+# `<Anim>` code line highlight, with context
+
+`spec="@code {1;3} .c2 | @code {3-} .c1 | @code {2} .c2"`
+
+<Anim spec="@code {1;3} .c2 | @code {3-} .c1 | @code {2} .c2" class="grid grid-cols-2 gap-4">
+<div class="c1">
+
+And more code later on the left
+
+```ts
+function add(
+  a: Ref<number> | number,
+  b: Ref<number> | number
+) {
+  return computed(() => unref(a) + unref(b))
+}
+```
+
+</div>
+<div class="c2">
+
+Some code later on the right
+
+```css
+h1 {
+  color: red
+}
+```
+
+</div>
+</Anim>
+
+
+
+
+
+
+
+@@@@@FRONTMATTER@  layout: anim%nspec: '@step 1 | @step 2 | -strong | @step 42'
+@@@@@FEATURE@@@@@  Anim Layout (shortcut)
+
+
+Defined in <gh href="layouts/anim.vue"/>
+
+It wraps the content into an anim, and expects a `spec` header as in
+
+```yaml
+layout: anim
+spec: '@step 1 | @step 2 | -strong | @step 42'
+```
+
+- first level
+- hum
+- ok now we'll <s0/> **nest**
+  - nested 1
+  - nested 2 <span class="step"/> <span>and 2.5</span>
+  - and 3
+- voila! <span class="step"/>
+- tada!
+

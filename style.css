@@ -1,0 +1,18 @@
+
+
+/* We have a lot of sections, so we use a custom dotted TOC in the footer. */
+
+footer .slidev-toc {
+    padding: 0;
+    font-size: 15px;
+    height: 1.2em;
+    width: 300px;
+    display: grid;
+    grid-template-columns: repeat(30, 0fr);
+    grid-auto-rows: auto;
+    grid-auto-flow: row;
+}
+footer .slidev-toc-dot {
+    display: inline-block;
+    line-height: .5;
+}
