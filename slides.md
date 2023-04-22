@@ -10,6 +10,8 @@ NObackground: >-
   https://images.unsplash.com/photo-1511149755252-35875b273fd6?ixlib=rb-4.0.3&dl=leon-contreras-qpdfU6vehgs-unsplash.jpg&w=1920&q=80&fm=jpg&crop=entropy&cs=tinysrgb
 background: https://source.unsplash.com/qpdfU6vehgs
 highlighter: shiki
+routerMode: hash
+lineNumbers: true
 info: >
   ## Slidev ultracharger demo
 
@@ -514,16 +516,16 @@ Some italic (em) *here is an em*
 # `<Anim>`: successive move along and backward move
 
 `spec="@along #path1 #sh1,#sh3-1
- |@along #path1 #sh1,#sh3-1` \
-`     |@along -#path1 #sh1,#sh3-1
-|@along #path1 #sh1,#sh3-1`
+ | @along #path1 #sh1,#sh3-1` \
+`     | @along -#path1 #sh1,#sh3-1
+| @along #path1 #sh1,#sh3-1`
 
 NB: newlines are ok in `spec`
 
 <Anim spec="@along #path1 #sh1,#sh3-1
-|@along #path1 #sh1,#sh3-1
-|@along -#path1 #sh1,#sh3-1
-|@along #path1 #sh1,#sh3-1">
+| @along #path1 #sh1,#sh3-1
+| @along -#path1 #sh1,#sh3-1
+| @along #path1 #sh1,#sh3-1">
 <InlineSvg src="/test-anim.svg" height="330px"/>
 </Anim>
 
@@ -534,15 +536,15 @@ NB: newlines are ok in `spec`
 
 `spec="
  @along #path1   .stuff
-|@along #path1-1 .stuff
-|@along #path1-1 .stuff"`
+| @along #path1-1 .stuff
+| @along #path1-1 .stuff"`
 
 NB: still needs an SVG path, also svg vs html units can be tricky.
 
 <Anim spec="
  @along #path1   .stuff
-|@along #path1-1 .stuff
-|@along #path1-1 .stuff
+| @along #path1-1 .stuff
+| @along #path1-1 .stuff
 ">
 ...
 <span style="display: inline-block" class="stuff">stuff</span>
@@ -585,7 +587,7 @@ NB: using `@viewbox` for default duration or `@viewboxd` to specify the duration
 
 - TODO: allow specifying ease-in-out etc (like duration)
 - TODO: ^ maybe need special steps that set defaults for all coming steps (as in the original @anim)
-- TODO: not necessarily possible: fix the @steps issue with opacity animation on nested elements
+- TODO: not necessarily possible: fix the @step issue with opacity animation on nested elements
 - TODO: might use [:nth-child(... of ...)](https://caniuse.com/?search=nth-child%20of) when/if available in browsers
 - TODO: implement viewBox-like anim for non-SVG
 
@@ -658,16 +660,16 @@ NB: use a mark with class `step0` (or just `<s0/>`) to decide up to where it is 
 
 ---
 
-# Marker-based steps, `@steps` shortcut + special `&|`
+# Marker-based steps, `@step` shortcut + special `&|`
 
-`spec="@steps 1-4 | -strong | @steps 5-"`
+`spec="@step 1-4 | -strong | @step 5-"`
 
-NB: can use `@steps` and a range to simplify writing several `@step` \
-NB: can use an open range as in `@steps 5-` to go until the end \
-NB: spec defaults to `@steps 1-` \
+NB: can use `@step` with a range to simplify writing several `@step` \
+NB: can use an open range as in `@step 5-` to go until the end \
+NB: spec defaults to `@step 1-` \
 NB: (TODO UPDATE) can use `&|` to insert a span with class `step` (implemented in <gh href="./vite.config.ts"/>)
 
-<Anim spec="@steps 1-4 | -strong | @steps 5-">
+<Anim spec="@step 1-4 | -strong | @step 5-">
 
 - first level
 - hum &|
@@ -691,7 +693,7 @@ NB: (TODO UPDATE) can use `&|` to insert a span with class `step` (implemented i
 
 @@@@@FEATURE@@@@@  Katex "align" (equation block) and code animation
 
-`spec="@maths 1-"`
+`spec="@math 1-"`
 
 $$
 \gdef\lnp{\ln p}
@@ -709,7 +711,7 @@ $$
 \gdef\comm#1{\text{\textcolor{gray}{#1} } }
 $$
 
-<Anim spec="@maths 1-">
+<Anim spec="@math 1-">
 
 $$
 \begin{align*}
@@ -734,9 +736,9 @@ $$
 
 # `<Anim>` katex, specifying a context
 
-`spec="@mathsc 1- .my>:nth-child(1) | .my>:nth-child(2) | @mathsc 1-3 .my>:nth-child(3)"`
+`spec="@math 1- .my>:nth-child(1) | em | @math 1-3 .my>:nth-child(3)"`
 
-<Anim spec="@mathsc 1- .my>:nth-child(1) | .my>:nth-child(2) | @mathsc 1-3 .my>:nth-child(3)" class="my">
+<Anim spec="@math 1- .my>:nth-child(1) | em | @math 1-3 .my>:nth-child(3)" class="my">
 
 $$
 \begin{align*}
@@ -748,7 +750,7 @@ $$
 \end{align*}
 $$
 
-And we can rewrite the expectation
+... <em>And we can rewrite the expectation</em>
 
 $$
 \begin{align*}
@@ -766,12 +768,47 @@ $$
 
 ---
 
-# `<Anim>` code, with context (just code, no codec) (highlight is on next slide)
+# `<Anim>` ordering and grouping (also for `@code`)
 
-`spec="@code 1,3 .c2 | @code 1- .c1 | @code 2 .c2"`
+`spec="@math 2-3|1 .my>:nth-child(3) | em | @math [1|4|2-3] .my>:nth-child(1)` <br/>
+`|`: for ordering a sequence, and `[]`: to show ranges at once (`2-3` vs `[2-3]`)
+
+<Anim spec="@math 2-3|1 .my>:nth-child(3) | em | @math [1|4|2-3] .my>:nth-child(1)" class="my">
+
+$$
+\begin{align*}
+\ln q_π(\p)
+& = \E_{\neg π}[\lnp(X,\Z,\p,\m)] + K_1 \\
+& \;\;\;\;\; \comm{(remove what is constant (and thus remains after expectation) with respect to $\p$)} \\
+& = \E_{\neg π}\left[\ln prior(\p) + \sum_i \ln \p_{\z_i}\right] + K_2 \\
+& = \ln prior(\p) + \sum_i \E_{\z_i}[\ln \p_{\z_i}] + K_2
+\end{align*}
+$$
+
+... <em>And we can rewrite the expectation</em>
+
+$$
+\begin{align*}
+\ln q_π(\p)
+& = \ln prior(\p) + \sum_i \sum_k q_z^i(k) \ln \p_k + K_2 \\
+& = \sum_k (α_k -1 ) \ln \p_k + \sum_k \sum_i q_z^i(k) \ln \p_k + K_3 
+\;\; \comm{with $q_z^i(k)$ the responsibility, i.e. $R_{ik}$} \\
+& = \sum_k ((α_k+\sum_i R_{ik}) -1 ) \ln \p_k + K_3
+\;\; \comm{(once reorganized)}
+\end{align*}
+$$
+
+</Anim>
+
+
+---
+
+# `<Anim>` code, each as a step, with context (highlight is on next slide)
+
+`spec="@code 1,3 .c2 | @code [1|2-4|5-] .c1 | @code 2 .c2"`
 <!-- or -->
 
-<Anim spec="@code 1,3 .c2 | @code 1- .c1 | @code 2 .c2" class="grid grid-cols-2 gap-4">
+<Anim spec="@code 1,3 .c2 | @code [1|2-4|5-] .c1 | @code 2 .c2" class="grid grid-cols-2 gap-4">
 <div class="c1">
 
 And more code later on the left
@@ -803,9 +840,9 @@ h1 {
 
 # `<Anim>` code line highlight, with context
 
-`spec="@code {1;3} .c2 | @code {3-} .c1 | @code {2} .c2"`
+`spec="@code {0} ^ .c1,.c2 | @code {1|3} .c2 | @code {3-} .c1 | @code {2} .c2"`
 
-<Anim spec="@code {1;3} .c2 | @code {3-} .c1 | @code {2} .c2" class="grid grid-cols-2 gap-4">
+<Anim spec="@code {0} ^ .c1,.c2 | @code {1|3} .c2 | @code {3-} .c1 | @code {2} .c2" class="grid grid-cols-2 gap-4">
 <div class="c1">
 
 And more code later on the left
@@ -833,6 +870,58 @@ h1 {
 </div>
 </Anim>
 
+
+---
+
+# `<Anim>` code, customizing CSS
+
+`spec="@code 1,3 .c2 | @code [1|2-4|5-] .c1 | @code 2 .c2"`
+<!-- or -->
+
+<Anim spec="@code 1,3 .c2 | @code [1|2-4|5-] .c1 | @code 2 .c2" class="grid grid-cols-2 gap-4">
+<div class="c1">
+
+And more code later on the left
+
+```ts
+function add(
+  a: Ref<number> | number,
+  b: Ref<number> | number
+) {
+  return computed(() => unref(a) + unref(b))
+}
+```
+
+</div>
+<div class="c2">
+
+Some code later on the right
+
+```css
+h1 {
+  color: red
+}
+```
+
+</div>
+</Anim>
+
+<style>
+/* Fold hidden code lines */
+code .line.anim-hidden {
+	display: block;
+	overflow: hidden;
+	margin-bottom: calc(-1 * var(--slidev-code-line-height)) !important;
+}
+code span.anim-hidden:not(:last-child) {
+	height: 0;
+}
+
+/* Change line numbers based on visible lines only */
+.slidev-code-line-numbers .slidev-code code .line.anim-hidden::before {
+	counter-increment: none;
+}
+</style>
 
 
 
