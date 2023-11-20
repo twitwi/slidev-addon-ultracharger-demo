@@ -16,3 +16,13 @@ footer .slidev-toc-dot {
     display: inline-block;
     line-height: .5;
 }
+.FEATURE {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.333), rgba(0, 0, 0, 0.533)), url("https://source.unsplash.com/JgOeRuGD_Y4/medium"), linear-gradient(rgb(0, 0, 255), rgb(0, 0, 0)) !important;
+}
+.FEATURE h1 {
+    color: grey !important;
+}
+.FEATURE h1~div {
+    color: white !important;
+    font-size: 3.35rem !important;
+}
