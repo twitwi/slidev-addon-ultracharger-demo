@@ -299,7 +299,7 @@ Fixed using idRewrite (set by default)
 # InlineSvg, options and workarounds
 Configuring the InlineSvg element.
 
-In addition to width/height/wrap attributed, more advanced options like `idRewrite` can be specified as
+In addition to width/height/wrap attributes, more advanced options like `idRewrite` can be specified as
   - `<InlineSvg :opts="{...}" />`
   - a list of options can be found at <gh href="./components/InlineSvg.vue" line="51"/>
 
@@ -444,7 +444,7 @@ Some italic (em) *here is an em*
 
 ---
 
-# `<Anim>` works with SVG elements
+# `<Anim>` works with (inline) SVG elements
 
 `spec="#rect846 | #path930 | @+class blur text | @-class blur #text26519"`
 
