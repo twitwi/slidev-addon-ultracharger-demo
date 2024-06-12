@@ -12,7 +12,7 @@ git diff HEAD > ",,save-diff-$(date --iso-8601=seconds)"
 
 
 rm -rf dist/
-slidev build --base=/"$repo"/
+pnpm build --base=/"$repo"/
 git switch gh-pages
 {
     git ls-files | grep -ve '^\.gitignore$' | xargs git rm
