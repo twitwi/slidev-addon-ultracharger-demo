@@ -1,7 +1,7 @@
 ---
 theme: seriph
 addons:
-  - slidev-addon-ultracharger
+  - "@twitwi/slidev-addon-ultracharger"
 addonsConfig:
   ultracharger:
     inlineSvg: 
@@ -23,7 +23,7 @@ info: >
 
   NB: [Source code
   available](https://github.com/twitwi/slidev-addon-ultracharger)
-css: windicss # or unocss
+css: unocss
 title: Slidev Ultracharger
 subtitle: ...used as both a test page and a quick documentation
 date: '2022-11-23'
@@ -383,7 +383,6 @@ Read more about [Why Slidev?](https://sli.dev/guide/why)
 NB:
 
 - defined in <gh href="./components/Anim.vue"/>
-- some style in <gh href="./style.css" line="14"/>
 - more features in the next slides (and in section animating SVG)
 
 ---
@@ -609,14 +608,13 @@ NB: using `@viewbox` for default duration or `@viewboxd` to specify the duration
 # Marker-based steps, raw, verbose
 
 `spec="@step 1 | @step 2 | @step 3 | @step 4 | @step 5` \
-`    | -strong | @step 6 | @step 7 | @step 99"`
+`    | -strong | @step 6 | @step 7 | @step 8"`
 
 NB: using class "step" on the marks \
 NB: here some CSS to show the mark \
-NB: the content starts hidden (low opacity) \
-NB: any big number is ok to show everything
+NB: the content starts hidden (low opacity)
 
-<Anim spec="@step 1 | @step 2 | @step 3 | @step 4 | @step 5 | -strong | @step 6 | @step 7 | @step 99">
+<Anim spec="@step 1 | @step 2 | @step 3 | @step 4 | @step 5 | -strong | @step 6 | @step 7 | @step 8">
 
 - first level
 - hum <span class="step"/>
@@ -637,11 +635,11 @@ NB: any big number is ok to show everything
 
 # Marker-based steps, control what is initially shown
 
-`spec="@step 1 | @step 2 | -strong | @step 42"`
+`spec="@step 1 | @step 2 | -strong | @step 3"`
 
 NB: use a mark with class `step0` (or just `<s0/>`) to decide up to where it is initially shown
 
-<Anim spec="@step 1 | @step 2 | -strong | @step 42">
+<Anim spec="@step 1 | @step 2 | -strong | @step 3">
 
 - first level
 - hum
@@ -928,7 +926,7 @@ code span.anim-hidden:not(:last-child) {
 
 
 
-@@@@@FRONTMATTER@  layout: anim%nspec: '@step 1 | @step 2 | -strong | @step 42'
+@@@@@FRONTMATTER@  layout: anim%nspec: '@step 1 | @step 2 | -strong | @step 3'
 @@@@@FEATURE@@@@@  Anim Layout (shortcut)
 
 
@@ -938,7 +936,7 @@ It wraps the content into an anim, and expects a `spec` header as in
 
 ```yaml
 layout: anim
-spec: '@step 1 | @step 2 | -strong | @step 42'
+spec: '@step 1 | @step 2 | -strong | @step 3'
 ```
 
 - first level
@@ -950,3 +948,8 @@ spec: '@step 1 | @step 2 | -strong | @step 42'
 - voila! <span class="step"/>
 - tada!
 
+
+
+
+
+@@@@@FEATURE@@@@@  THE END
